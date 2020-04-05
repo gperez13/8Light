@@ -3,6 +3,7 @@
 namespace App\Commands;
 
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Http;
 use LaravelZero\Framework\Commands\Command;
 
 class SearchCommand extends Command
@@ -28,8 +29,30 @@ class SearchCommand extends Command
      */
     public function handle()
     {
+        $url = 'https://www.googleapis.com/books/v1/volumes?q='.$this->argument('params').'&maxResults=5';
+        $response = json_decode(Http::get($url)->getBody(), true);
 
-        $this->info('Hello World, here is '.$this->argument('params'));
+        
+        if($response["totalItems"] === 0){
+            $this->info('There were no matching results for '.$this->argument("params"));
+        } else {
+
+            foreach ($response["items"] as $book){
+    
+                $this->info('Title: ' .$book["volumeInfo"]["title"]);
+                $this->info('Author: ' .$book["volumeInfo"]["authors"][0]);
+                $this->info('Publisher: ' .$book["volumeInfo"]["publisher"]);
+                $this->info('ID: ' .$book["id"]);
+                $this->info('---------------------');
+            }
+
+            if ($this->confirm("Would you like to bookmark any of these books?")) {
+                $this->info('Huzzah!');
+                exit();
+            }
+            $this->info("The wise speak only of what they know 🧙‍♂️");
+        }
+
     }
 
     /**

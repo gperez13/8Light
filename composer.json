@@ -17,8 +17,12 @@
     ],
     "require": {
         "php": "^7.2.5",
+        "guzzlehttp/guzzle": "^6.3.1",
         "illuminate/database": "^7.0",
-        "laravel-zero/framework": "^7.0"
+        "illuminate/http": "^7.0",
+        "laminas/laminas-text": "^2.7",
+        "laravel-zero/framework": "^7.0",
+        "nunomaduro/laravel-console-menu": "^3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
