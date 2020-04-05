@@ -32,30 +32,36 @@ class ReadingListCommand extends Command
     {
         $books = DB::select('select * from books');
         $optionsArray = [];
+
+        if(count($books) === 0){
+            $this->info('Currently, there are no books in your ReadingList. Try executing a Search to add a book.');
+        } else {
+
+            foreach ($books as $book){
+                array_push(
+                    $optionsArray,
+                    $book->title." by ".$book->author
+                );
+    
+                $this->info('Title: ' .$book->title);
+                $this->info('Author: ' .$book->author);
+                $this->info('Publisher: ' .$book->publisher);
+                $this->info('ID: ' .$book->id);
+                $this->info('---------------------');
+            }
+    
+            if ($this->confirm("Would you like to delete any of these books?")) {
+                $option = $this->menu('ReadingList', $optionsArray)
+                    ->disableDefaultItems()
+                    ->open();
+    
+                DB::table('books')->where('id', $books[$option]->id)->delete();
+                $this->info('This book has been removed to your Reading List!');
+                exit();
+            }
+            $this->info("To the Bridge of Khazad-dûm! 🧙‍♂️");
+        }
         
-        foreach ($books as $book){
-            array_push(
-                $optionsArray,
-                $book->title." by ".$book->author
-            );
-
-            $this->info('Title: ' .$book->title);
-            $this->info('Author: ' .$book->author);
-            $this->info('Publisher: ' .$book->publisher);
-            $this->info('ID: ' .$book->id);
-            $this->info('---------------------');
-        }
-
-        if ($this->confirm("Would you like to delete any of these books?")) {
-            $option = $this->menu('ReadingList', $optionsArray)
-                ->disableDefaultItems()
-                ->open();
-
-            DB::table('books')->where('id', $books[$option]->id)->delete();
-            $this->info('This book has been removed to your Reading List!');
-            exit();
-        }
-        $this->info("To the Bridge of Khazad-dûm! 🧙‍♂️");
     }
 
     /**
