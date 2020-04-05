@@ -45,7 +45,6 @@ class SearchCommand extends Command
                     $optionsArray, 
                     $book["volumeInfo"]["title"]." by ".$book["volumeInfo"]["authors"][0]
                 );
-
                 $this->info('Title: ' .$book["volumeInfo"]["title"]);
                 $this->info('Author: ' .$book["volumeInfo"]["authors"][0]);
                 $this->info('Publisher: ' .$book["volumeInfo"]["publisher"]);
