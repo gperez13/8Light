@@ -34,6 +34,10 @@ class ReadingListCommand extends Command
         $optionsArray = [];
         
         foreach ($books as $book){
+            array_push(
+                $optionsArray,
+                $book->title." by ".$book->author
+            );
 
             $this->info('Title: ' .$book->title);
             $this->info('Author: ' .$book->author);
@@ -41,6 +45,17 @@ class ReadingListCommand extends Command
             $this->info('ID: ' .$book->id);
             $this->info('---------------------');
         }
+
+        if ($this->confirm("Would you like to delete any of these books?")) {
+            $option = $this->menu('ReadingList', $optionsArray)
+                ->disableDefaultItems()
+                ->open();
+
+            DB::table('books')->where('id', $books[$option]->id)->delete();
+            $this->info('This book has been removed to your Reading List!');
+            exit();
+        }
+        $this->info("To the Bridge of Khazad-dûm! 🧙‍♂️");
     }
 
     /**
