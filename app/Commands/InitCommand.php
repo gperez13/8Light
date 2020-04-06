@@ -29,16 +29,12 @@ class InitCommand extends Command
     public function handle()
     {
         $this->task("Setting up Database if it does not exist", function () {
-
             echo shell_exec("sudo mysql -e 'CREATE DATABASE IF NOT EXISTS bookshelf_local;'");
-            
             return true;
         });
 
         $this->task("Running initial migrations", function () {
-            
             echo shell_exec('php bookshelf migrate');
-            
             return true;
         });
 
